@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H2 CLUB - Página</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #e1bee7, #6a1b9a); /* Gradiente de roxo claro para roxo escuro */
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #d1c4e9, #5e35b1); /* Gradiente de roxo */
+            border: 1px solid #d1c4e9;
+            border-radius: 8px;
+            color: #ffffff;
+        }
+        .hidden {
+            display: none;
+        }
+        .password-screen {
+            background-color: #6a1b9a; /* Roxo escuro */
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px;
+        }
+        .password-screen input {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            border: 1px solid #d1c4e9;
+            border-radius: 4px;
+        }
+        .form-screen {
+            display: none;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #d1c4e9;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #6a1b9a; /* Roxo escuro */
+            color: #ffffff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4a148c; /* Roxo mais escuro */
+        }
+        .error-message {
+            color: #f44336; /* Vermelho */
+            font-weight: bold;
+        }
+        .form-screen h1 {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="password-screen" class="password-screen">
+        <h1>Proteção por Senha</h1>
+        <input type="password" id="password" placeholder="Digite a senha">
+        <button onclick="checkPassword()">Entrar</button>
+        <p id="error-message" class="error-message hidden">Senha incorreta. Tente novamente.</p>
+    </div>
+    
+    <div id="form-screen" class="form-screen container">
+        <h1>H2 CLUB</h1>
+        <form id="data-form">
+            <div class="form-group">
+                <label for="operation">Operação</label>
+                <select id="operation" required>
+                    <option value="">Selecione uma opção</option>
+                    <option value="saque">Saque</option>
+                    <option value="deposito">Depósito</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="status">Status do Saque</label>
+                <select id="status" class="hidden" required>
+                    <option value="">Selecione o status</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="permitido">Permitido</option>
+                    <option value="rejeitado">Rejeitado</option>
+                    <option value="pago">Pago</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">Nome</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" id="cpf" required>
+            </div>
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" id="id" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Valor</label>
+                <input type="text" id="amount" required>
+            </div>
+            <div class="form-group">
+                <label for="financial">Financeira</label>
+                <select id="financial" required>
+                    <option value="">Selecione uma financeira</option>
+                    <option value="startsPay">StartsPay</option>
+                    <option value="safeway">Safeway</option>
+                    <option value="zro">Z.ro</option>
+                    <option value="paybrokers">Paybrokers</option>
+                    <option value="pagfast">Pagfast</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="copyData()">Copiar para Enviar</button>
+            </div>
+            <div id="form-error-message" class="error-message hidden"></div>
+        </form>
+    </div>
+
+    <script>
+        const correctPassword = '2122';
+        const passwordScreen = document.getElementById('password-screen');
+        const formScreen = document.getElementById('form-screen');
+        const errorMessage = document.getElementById('error-message');
+        const formErrorMessage = document.getElementById('form-error-message');
+
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            if (password === correctPassword) {
+                passwordScreen.style.display = 'none';
+                formScreen.style.display = 'block';
+                document.getElementById('password').value = ''; // Limpa o campo de senha após a autenticação
+                errorMessage.classList.add('hidden'); // Certifica-se de que a mensagem de erro está oculta
+                startAutoRefresh();
+            } else {
+                errorMessage.textContent = 'Senha incorreta. Tente novamente.';
+                errorMessage.classList.remove('hidden');
+            }
+        }
+
+        function startAutoRefresh() {
+            setInterval(() => {
+                window.location.reload();
+            }, 3600000); // Atualiza a cada 1 hora (3600000 ms)
+        }
+
+        document.getElementById('operation').addEventListener('change', function() {
+            const statusSelect = document.getElementById('status');
+            if (this.value === 'saque') {
+                statusSelect.classList.remove('hidden');
+            } else {
+                statusSelect.classList.add('hidden');
+            }
+        });
+
+        function copyData() {
+            const operation = document.getElementById('operation').value;
+            const status = document.getElementById('status').value;
+            const name = document.getElementById('name').value;
+            const cpf = document.getElementById('cpf').value;
+            const id = document.getElementById('id').value;
+            const amount = document.getElementById('amount').value;
+            const financial = document.getElementById('financial').value;
+
+            let message = '';
+
+            if (operation === 'saque') {
+                if (!name || !cpf || !id || !amount || !financial) {
+                    formErrorMessage.textContent = 'Ai não my friend, está faltando algum dado. Ajude seu controle.';
+                    formErrorMessage.classList.remove('hidden');
+                    return;
+                }
+                message = `Seguem dados de saque > ${status}\nNome: ${name}\nCPF: ${cpf}\nID: ${id}\nVALOR: ${amount}\nFINANCEIRA: ${financial}\n\nJogador está com o saque ${status}, poderiam verificar?`;
+            } else if (operation === 'deposito') {
+                if (!name || !cpf || !id || !amount || !financial) {
+                    formErrorMessage.textContent = 'Ai não my friend, está faltando algum dado. Ajude seu controle.';
+                    formErrorMessage.classList.remove('hidden');
+                    return;
+                }
+                message = `Seguem dados de depósito\nNome: ${name}\nCPF: ${cpf}\nID: ${id}\nVALOR: ${amount}\nFINANCEIRA: ${financial}`;
+            }
+
+            navigator.clipboard.writeText(message).then(() => {
+                alert('Dados copiados para a área de transferência!');
+                document.getElementById('data-form').reset();
+                formErrorMessage.classList.add('hidden');
+            });
+        }
+
+        window.onload = () => {
+            startAutoRefresh();
+        };
+    </script>
+</body>
+</html>
